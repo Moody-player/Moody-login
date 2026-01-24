@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moody 인증 센터</title>
+    <style>
+        /* 무디 스타일 (다크모드 + 스포티파이 그린) */
+        body { background-color: #121212; color: white; font-family: -apple-system, sans-serif; text-align: center; padding: 20px; display: flex; flex-direction: column; justify-content: center; min-height: 90vh; margin: 0; }
+        .container { max-width: 400px; margin: 0 auto; }
+        h1 { color: #1DB954; margin-bottom: 30px; }
+        .card { background: #181818; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        
+        input { width: 100%; padding: 15px; margin: 15px 0; border-radius: 8px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; border-radius: 50px; border: none; background-color: #1DB954; color: black; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.2s; }
+        button:hover { background-color: #1ed760; transform: scale(1.02); }
+        
+        .code-box { display: none; margin-top: 20px; }
+        textarea { width: 100%; height: 80px; background: #111; color: #1DB954; border: 1px solid #1DB954; border-radius: 8px; padding: 10px; font-family: monospace; font-size: 14px; resize: none; }
+        .guide { font-size: 13px; color: #aaa; margin-bottom: 20px; line-height: 1.5; text-align: left; background: #222; padding: 15px; border-radius: 8px;}
+        code { background: #444; padding: 3px; border-radius: 3px; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Moody Setup 🎵</h1>
+
+        <div id="step1" class="card">
+            <div class="guide">
+                <b>1. 준비 단계</b><br>
+                Spotify 개발자 대시보드에서 [Redirect URI]를 아래 주소로 설정해주세요.<br>
+                <code id="current-url" style="display:block; margin-top:8px; word-break:break-all; font-size:11px;">로딩중...</code>
+            </div>
+
+            <p style="font-weight:bold;">2. Client ID 입력</p>
+            <input type="text" id="clientId" placeholder="여기에 Client ID를 붙여넣으세요">
+            <button onclick="startAuth()">Spotify 로그인 & 코드 받기</button>
+        </div>
+
+        <div id="step2" class="card code-box">
+            <h2 style="color:#1DB954; margin-top:0;">✅ 인증 성공!</h2>
+            <p style="color:#ddd; font-size:14px;">아래 코드를 복사해서<br>Moody 설정창에 붙여넣으세요.</p>
+            
+            <textarea id="resultCode" readonly></textarea>
+            <button onclick="copyCode()" style="margin-top:15px; background:#fff;">📋 코드 복사하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. 현재 이 사이트 주소를 자동으로 감지합니다.
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
+        
+        // 화면에 현재 주소 보여주기 (뒤에 /가 있다면 제거)
+        const cleanUrl = REDIRECT_URI.endsWith('/') ? REDIRECT_URI.slice(0, -1) : REDIRECT_URI;
+        document.getElementById('current-url').innerText = cleanUrl;
+
+        // 2. 주소창에 'code=' 가 있는지 확인 (로그인하고 돌아왔는지 체크)
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+
+        if (code) {
+            // 코드가 있으면 -> 결과 화면 보여주기
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('resultCode').value = code;
+        }
+
+        // 3. 로그인 버튼 눌렀을 때 실행
+        function startAuth() {
+            const clientId = document.getElementById('clientId').value.trim();
+            if (!clientId) {
+                alert("Client ID를 먼저 입력해주세요!");
+                return;
+            }
+
+            // 스포티파이 로그인 페이지로 이동시키는 링크 생성
+            const scope = "user-read-playback-state user-modify-playback-state user-read-currently-playing";
+            const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(cleanUrl)}&scope=${encodeURIComponent(scope)}`;
+            
+            window.location.href = authUrl;
+        }
+
+        // 4. 복사 버튼 기능
+        function copyCode() {
+            const copyText = document.getElementById("resultCode");
+            copyText.select();
+            document.execCommand("copy");
+            alert("코드가 복사되었습니다! \n이제 Moody 설정창으로 돌아가세요.");
+        }
+    </script>
+
+</body>
+</html>
