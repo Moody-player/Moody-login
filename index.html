@@ -5,17 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moody 설정 마법사</title>
     <style>
-        body { background-color: #121212; color: white; font-family: -apple-system, sans-serif; text-align: center; padding: 20px; margin: 0; line-height: 1.6;}
+        /* 1. [핵심] 모든 요소의 사이즈 계산을 '테두리 기준'으로 통일 (튀어나감 방지) */
+        * { box-sizing: border-box; }
+
+        body { 
+            background-color: #121212; 
+            color: white; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            margin: 0; 
+            line-height: 1.6;
+        }
+        
         .container { max-width: 420px; margin: 0 auto; padding-bottom: 50px; }
         
-        .step-box { background: #181818; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid #333; position: relative; }
-        .step-num { position: absolute; top: -10px; left: -10px; background: #1DB954; color: black; width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; font-weight: bold; font-size: 18px; }
+        /* 카드 박스 디자인 */
+        .step-box { 
+            background: #181818; 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-bottom: 25px; 
+            text-align: left; 
+            border: 1px solid #333; 
+            position: relative; 
+        }
         
-        input { width: 100%; padding: 15px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
-        label { font-size: 13px; color: #1DB954; font-weight:bold; display:block; margin-bottom:5px;}
+        /* 번호 배지 */
+        .step-num { 
+            position: absolute; top: -10px; left: -10px; 
+            background: #1DB954; color: black; 
+            width: 30px; height: 30px; border-radius: 50%; 
+            text-align: center; line-height: 30px; 
+            font-weight: bold; font-size: 18px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
         
-        .main-btn { width: 100%; padding: 15px; border-radius: 50px; border: none; background-color: #1DB954; color: black; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 10px; }
-        .sub-btn { display:inline-block; padding: 8px 15px; background:#333; color:white; border-radius:20px; text-decoration:none; font-size:12px; border:1px solid #555; margin-bottom:15px;}
+        /* 입력창 */
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            margin-top: 5px; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            border: 1px solid #333; 
+            background: #222; 
+            color: white; 
+            font-size: 16px; 
+        }
+        input:focus { border-color: #1DB954; outline: none; }
+        
+        label { 
+            font-size: 13px; 
+            color: #1DB954; 
+            font-weight: bold; 
+            display: block; 
+            margin-bottom: 5px; 
+            margin-top: 10px;
+        }
+        
+        /* 메인 버튼 (튀어나감 수정됨) */
+        .main-btn { 
+            display: block; 
+            width: 100%; 
+            padding: 15px; 
+            border-radius: 50px; 
+            border: none; 
+            background-color: #1DB954; 
+            color: black; 
+            font-weight: bold; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            text-align: center; 
+            text-decoration: none; 
+        }
+        .main-btn:active { opacity: 0.9; transform: scale(0.98); }
+
+        /* 서브 버튼 (작은 버튼) */
+        .sub-btn { 
+            display: inline-block; 
+            padding: 8px 12px; 
+            background: #333; 
+            color: #ddd; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-size: 12px; 
+            border: 1px solid #555; 
+            margin-bottom: 10px;
+        }
+
+        /* URL 박스 (줄바꿈 처리) */
+        .url-box {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px dashed #444;
+            margin-bottom: 5px;
+        }
+        .url-code {
+            color: #1DB954;
+            word-break: break-all; /* 긴 주소 강제 줄바꿈 */
+            font-family: monospace;
+            font-size: 13px;
+        }
         
         .hidden { display: none; }
     </style>
@@ -23,24 +118,28 @@
 <body>
 
 <div class="container">
-    <h2 style="color:#1DB954">Moody Setup 🎵</h2>
+    <h2 style="color:#1DB954; margin-bottom: 30px;">Moody Setup 🎵</h2>
 
     <div id="setup-step" class="step-box">
         <div class="step-num">1</div>
-        <h3>주소 등록</h3>
-        <p style="font-size:13px; color:#aaa;">아래 주소를 스포티파이 대시보드에 추가하세요.</p>
-        <div style="background:#222; padding:10px; border-radius:8px; text-align:center; cursor:pointer;" onclick="copyUrl()">
-            <code id="my-url" style="color:#1DB954;">loading...</code>
+        <h3>주소 등록하기</h3>
+        <p style="font-size:13px; color:#aaa;">아래 주소를 눌러 복사한 뒤,<br>스포티파이 설정의 <b>Redirect URIs</b> 칸에 붙여넣으세요.</p>
+        
+        <div class="url-box" onclick="copyUrl()">
+            <code id="my-url" class="url-code">loading...</code>
+            <div style="font-size:11px; color:#666; margin-top:5px;">(👆 터치해서 복사)</div>
         </div>
-        <a href="https://developer.spotify.com/dashboard" target="_blank" class="main-btn" style="display:block; text-decoration:none; margin-top:15px; font-size:14px;">🚀 대시보드 바로가기</a>
+        
+        <a href="https://developer.spotify.com/dashboard" target="_blank" class="main-btn">🚀 Spotify 대시보드 열기 (새창)</a>
     </div>
 
     <div id="login-step" class="step-box">
         <div class="step-num">2</div>
-        <h3>정보 입력</h3>
+        <h3>아이디 입력하기</h3>
         
         <label>Username (아이디)</label>
-        <a href="accounts.spotify.com/api/token" target="_blank" class="sub-btn">🔍 내 아이디 확인하러 가기</a>
+        <p style="font-size:12px; color:#aaa; margin:0 0 8px 0;">아래 버튼을 눌러 나오는 <b>'사용자 이름'</b>을 복사하세요.</p>
+        <a href="https://www.spotify.com/account/overview/" target="_blank" class="sub-btn">🔍 내 아이디 확인하러 가기</a>
         <input type="text" id="spUsername" placeholder="예: 31ykww...">
         
         <label>Client ID</label>
@@ -57,20 +156,23 @@
         <h3 style="color:#1DB954">🎉 준비 완료!</h3>
         <p style="font-size:13px;">아래 버튼을 눌러 <b>전체 데이터</b>를 복사하고<br>무디 설정창에 붙여넣으세요.</p>
         
-        <button class="main-btn" style="background:white;" onclick="copyAllData()">📋 전체 데이터 복사하기</button>
-        <textarea id="jsonResult" style="width:1px; height:1px; opacity:0;"></textarea>
+        <button class="main-btn" style="background:white; color:black;" onclick="copyAllData()">📋 전체 데이터 복사하기</button>
+        <textarea id="jsonResult" style="width:1px; height:1px; opacity:0; position:fixed; left:-9999px;"></textarea>
     </div>
 </div>
 
 <script>
-    const CURRENT_URL = window.location.origin + window.location.pathname;
-    const cleanUrl = CURRENT_URL.endsWith('/') ? CURRENT_URL.slice(0, -1) : CURRENT_URL;
+    // 현재 주소 가져오기 (마지막 / 제거 및 쿼리 제거)
+    let cleanUrl = window.location.href.split('?')[0];
+    if (cleanUrl.endsWith('/')) cleanUrl = cleanUrl.slice(0, -1);
+    
     document.getElementById('my-url').innerText = cleanUrl;
 
     function copyUrl() {
-        navigator.clipboard.writeText(cleanUrl).then(() => alert("주소 복사 완료!"));
+        navigator.clipboard.writeText(cleanUrl).then(() => alert("주소가 복사되었습니다!\n스포티파이 설정창에 붙여넣으세요."));
     }
 
+    // 로그인 후 돌아왔을 때 처리
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     const state = params.get('state');
@@ -83,7 +185,6 @@
             document.getElementById('login-step').classList.add('hidden');
             document.getElementById('result-step').classList.remove('hidden');
 
-            // 사용자가 입력한 Username을 그대로 사용!
             const finalData = {
                 username: savedData.user, 
                 client_id: savedData.id,
@@ -115,7 +216,7 @@
         const copyText = document.getElementById("jsonResult");
         copyText.select();
         document.execCommand("copy");
-        alert("복사되었습니다! 무디 설정창에 붙여넣으세요.");
+        alert("데이터 복사 완료! \n무디 와이파이에 연결 후 설정창에 붙여넣으세요.");
     }
 </script>
 </body>
