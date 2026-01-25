@@ -7,41 +7,41 @@
     <style>
         body { background-color: #121212; color: white; font-family: -apple-system, sans-serif; text-align: center; padding: 20px; margin: 0; line-height: 1.6;}
         .container { max-width: 420px; margin: 0 auto; padding-bottom: 50px; }
-        h1 { color: #1DB954; margin-bottom: 10px; }
         
         .step-box { background: #181818; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid #333; position: relative; }
         .step-num { position: absolute; top: -10px; left: -10px; background: #1DB954; color: black; width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; font-weight: bold; font-size: 18px; }
         
-        input { width: 100%; padding: 15px; margin-top: 10px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
-        label { font-size: 12px; color: #aaa; margin-left: 5px; margin-top: 10px; display:block;}
+        input { width: 100%; padding: 15px; margin-top: 5px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; box-sizing: border-box; font-size: 16px; }
+        label { font-size: 13px; color: #1DB954; font-weight:bold; display:block; margin-bottom:5px;}
         
-        .main-btn { width: 100%; padding: 15px; border-radius: 50px; border: none; background-color: #1DB954; color: black; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 20px; }
-        .btn-link { display: block; width: 100%; padding: 12px; background: #333; color: white; text-align: center; text-decoration: none; border-radius: 8px; margin-top: 10px; font-size: 14px; box-sizing: border-box; border: 1px solid #555;}
+        .main-btn { width: 100%; padding: 15px; border-radius: 50px; border: none; background-color: #1DB954; color: black; font-weight: bold; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        .sub-btn { display:inline-block; padding: 8px 15px; background:#333; color:white; border-radius:20px; text-decoration:none; font-size:12px; border:1px solid #555; margin-bottom:15px;}
+        
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Moody Setup 🧙‍♂️</h1>
-    <p style="color:#aaa; font-size:14px;">설정 데이터를 한 번에 만듭니다.</p>
+    <h2 style="color:#1DB954">Moody Setup 🎵</h2>
 
     <div id="setup-step" class="step-box">
         <div class="step-num">1</div>
         <h3>주소 등록</h3>
-        <p style="font-size:13px; color:#aaa;">아래 주소를 스포티파이 대시보드의<br><b>Redirect URIs</b>에 추가하고 저장하세요.</p>
-        <div style="background:#222; padding:10px; border-radius:8px; text-align:center; cursor:pointer; margin-bottom:10px;" onclick="copyUrl()">
+        <p style="font-size:13px; color:#aaa;">아래 주소를 스포티파이 대시보드에 추가하세요.</p>
+        <div style="background:#222; padding:10px; border-radius:8px; text-align:center; cursor:pointer;" onclick="copyUrl()">
             <code id="my-url" style="color:#1DB954;">loading...</code>
         </div>
-        <a href="https://developer.spotify.com/dashboard" target="_blank" class="btn-link">🚀 대시보드 열기</a>
+        <a href="https://developer.spotify.com/dashboard" target="_blank" class="main-btn" style="display:block; text-decoration:none; margin-top:15px; font-size:14px;">🚀 대시보드 바로가기</a>
     </div>
 
     <div id="login-step" class="step-box">
         <div class="step-num">2</div>
         <h3>정보 입력</h3>
         
-        <label>Spotify Username (필수)</label>
-        <input type="text" id="spUsername" placeholder="예: gund0808 (프로필 ID)">
+        <label>Username (아이디)</label>
+        <a href="accounts.spotify.com/api/token" target="_blank" class="sub-btn">🔍 내 아이디 확인하러 가기</a>
+        <input type="text" id="spUsername" placeholder="예: 31ykww...">
         
         <label>Client ID</label>
         <input type="text" id="clientId" placeholder="Client ID 붙여넣기">
@@ -55,7 +55,7 @@
     <div id="result-step" class="step-box hidden" style="border: 2px solid #1DB954;">
         <div class="step-num">3</div>
         <h3 style="color:#1DB954">🎉 준비 완료!</h3>
-        <p>아래 버튼을 눌러 <b>전체 데이터</b>를 복사하세요.<br>이제 무디 와이파이 설정창에 붙여넣기만 하면 끝!</p>
+        <p style="font-size:13px;">아래 버튼을 눌러 <b>전체 데이터</b>를 복사하고<br>무디 설정창에 붙여넣으세요.</p>
         
         <button class="main-btn" style="background:white;" onclick="copyAllData()">📋 전체 데이터 복사하기</button>
         <textarea id="jsonResult" style="width:1px; height:1px; opacity:0;"></textarea>
@@ -71,32 +71,28 @@
         navigator.clipboard.writeText(cleanUrl).then(() => alert("주소 복사 완료!"));
     }
 
-    // 돌아왔을 때 처리
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     const state = params.get('state');
 
     if (code && state) {
         try {
-            // state에 숨겨둔 정보(ID, Secret, User) 복구
             const savedData = JSON.parse(atob(state));
             
             document.getElementById('setup-step').classList.add('hidden');
             document.getElementById('login-step').classList.add('hidden');
             document.getElementById('result-step').classList.remove('hidden');
 
-            // ✅ 최종 JSON 생성 (username 포함)
+            // 사용자가 입력한 Username을 그대로 사용!
             const finalData = {
-                username: savedData.user,  // 여기가 핵심!
+                username: savedData.user, 
                 client_id: savedData.id,
                 client_secret: savedData.secret,
                 auth_code: code
             };
             document.getElementById('jsonResult').value = JSON.stringify(finalData);
             
-        } catch (e) {
-            console.error("복구 실패", e);
-        }
+        } catch (e) { console.error(e); }
     }
 
     function startAuth() {
@@ -106,7 +102,6 @@
         
         if (!username || !clientId || !clientSecret) return alert("빈칸을 모두 채워주세요!");
 
-        // ✅ Username까지 state에 포장해서 보냄
         const stateData = JSON.stringify({ user: username, id: clientId, secret: clientSecret });
         const state = btoa(stateData); 
 
@@ -120,9 +115,8 @@
         const copyText = document.getElementById("jsonResult");
         copyText.select();
         document.execCommand("copy");
-        alert("데이터 복사 완료! \n무디 설정창으로 가서 붙여넣으세요.");
+        alert("복사되었습니다! 무디 설정창에 붙여넣으세요.");
     }
 </script>
-
 </body>
 </html>
