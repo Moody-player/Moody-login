@@ -40,8 +40,19 @@
             var clientSecret = document.getElementById('client_secret').value;
             var redirectUri = document.getElementById('uri-text').innerText;
 
+            // 1. 공백 체크
             if(!username || !clientId || !clientSecret) {
                 alert("모든 정보를 입력해주세요!");
+                return;
+            }
+
+            // 2. 글자 수 체크 (정확히 32자여야 통과)
+            if (clientId.length !== 32) {
+                alert("Client ID가 잘못되었습니다!\n(현재 " + clientId.length + "글자 / 32글자여야 합니다)");
+                return;
+            }
+            if (clientSecret.length !== 32) {
+                alert("Client Secret이 잘못되었습니다!\n(현재 " + clientSecret.length + "글자 / 32글자여야 합니다)");
                 return;
             }
 
@@ -61,7 +72,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>ᯤMoody 시작하기ᯤ</h1>
+        <h1>ᯤ나만의 Moody 열쇠 만들기ᯤ</h1>
 
         <form onsubmit="generateJSON(event)">
             
@@ -89,11 +100,11 @@
                 
                 <label>Client ID</label>
                 <p style="font-size:13px; color:#999; margin:2px 0 5px 0;">Dashboard > Settings 화면의 Client ID를 복사하세요.</p>
-                <input type="text" id="client_id" placeholder="Client ID 붙여넣기 (32자)" maxlength="32" required>
+                <input type="text" id="client_id" placeholder="Client ID 붙여넣기 (32자)" minlength="32" maxlength="32" required>
                 
                 <label>Client Secret</label>
                 <p style="font-size:13px; color:#999; margin:2px 0 5px 0;">'View client secret'을 눌러서 나오는 문구를 복사하세요.</p>
-                <input type="text" id="client_secret" placeholder="Client Secret 붙여넣기 (32자)" maxlength="32" required>
+                <input type="text" id="client_secret" placeholder="Client Secret 붙여넣기 (32자)" minlength="32" maxlength="32" required>
             </div>
 
             <div class="section-box" style="border-left: 5px solid #1DB954;">
@@ -104,11 +115,11 @@
                 <input type="text" id="username" placeholder="예: 31ykww4hfihbckljhfsdlgh" required>
             </div>
 
-            <button type="submit" class="submit">Token 발급받기 (클릭)</button>
+            <button type="submit" class="submit">Moody 열쇠 발급받기 (클릭)</button>
         </form>
 
         <div id="result-area">
-            <h3 style="color:white; margin-top:0;">👇 발급된 Token </h3>
+            <h3 style="color:white; margin-top:0;">👇 발급된 Moody 열쇠 </h3>
             <p style="font-size:13px; color:#aaa;">아래 내용을 복사 후 Moody_setup WiFI를 연결 후 2번째(10.42.0.1 로 접속) QR코드에 붙여넣으세요.</p>
             <textarea id="json-output" readonly></textarea>
             <button class="submit" onclick="copyText(document.getElementById('json-output').value)" style="background:#535353; color:white; margin-top:10px;">전체 복사하기</button>
