@@ -21,7 +21,7 @@
         input[type="text"] { width: 100%; padding: 14px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; font-size: 16px; }
         input[type="text"]:focus { outline: none; border-color: #1DB954; background: #333; }
         
-        /* 결과창 스타일 추가 */
+        /* 결과창 스타일 */
         #result-area { display: none; margin-top: 30px; background: #222; padding: 20px; border-radius: 10px; border: 2px solid #1DB954; }
         textarea { width: 100%; height: 150px; background: #121212; color: #1DB954; border: none; padding: 10px; font-family: monospace; font-size: 14px; box-sizing: border-box; margin-top: 10px; }
         
@@ -33,11 +33,8 @@
             navigator.clipboard.writeText(text).then(function() { alert("복사되었습니다!"); });
         }
 
-        // JSON 생성 함수 (서버 없이 브라우저에서 처리)
         function generateJSON(event) {
-            event.preventDefault(); // 405 에러 방지 (서버 전송 막기)
-
-            // 입력값 가져오기
+            event.preventDefault(); 
             var username = document.getElementById('username').value;
             var clientId = document.getElementById('client_id').value;
             var clientSecret = document.getElementById('client_secret').value;
@@ -48,7 +45,6 @@
                 return;
             }
 
-            // JSON 만들기
             var configData = {
                 "username": username,
                 "client_id": clientId,
@@ -56,12 +52,9 @@
                 "redirect_uri": redirectUri
             };
 
-            // 화면에 보여주기
             var jsonString = JSON.stringify(configData, null, 4);
             document.getElementById('json-output').value = jsonString;
             document.getElementById('result-area').style.display = 'block';
-            
-            // 화면 스크롤 내리기
             window.scrollTo(0, document.body.scrollHeight);
         }
     </script>
@@ -91,7 +84,7 @@
                 </div>
             </div>
 
-            <div class="section-box">
+            <div class="section-box" style="border-left: 5px solid #1DB954;">
                 <div class="section-title">2. 앱 키 입력</div>
                 
                 <label>Client ID</label>
@@ -111,11 +104,11 @@
                 <input type="text" id="username" placeholder="예: 31ykww4hfihbckljhfsdlgh" required>
             </div>
 
-            <button type="submit" class="submit">Moody token 발급받기 (클릭)</button>
+            <button type="submit" class="submit">Token 발급받기 (클릭)</button>
         </form>
 
         <div id="result-area">
-            <h3 style="color:white; margin-top:0;">👇 발급된 Moody Token </h3>
+            <h3 style="color:white; margin-top:0;">👇 발급된 Token </h3>
             <p style="font-size:13px; color:#aaa;">아래 내용을 복사 후 Moody_setup WiFI를 연결 후 2번째(10.42.0.1 로 접속) QR코드에 붙여넣으세요.</p>
             <textarea id="json-output" readonly></textarea>
             <button class="submit" onclick="copyText(document.getElementById('json-output').value)" style="background:#535353; color:white; margin-top:10px;">전체 복사하기</button>
