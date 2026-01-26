@@ -3,141 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moody 설정 도구</title>
+    <title>Moody Setup Preview</title>
     <style>
-        * { box-sizing: border-box; }
-        body { background-color: #121212; color: white; font-family: sans-serif; text-align: center; padding: 20px; margin: 0; line-height: 1.5; }
-        .container { max-width: 420px; margin: 0 auto; padding-bottom: 50px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #121212; color: white; padding: 20px; line-height: 1.6; }
+        .container { max-width: 500px; margin: 0 auto; background: #181818; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: #1DB954; margin-bottom: 20px; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 4px; border: 1px solid #333; background: #282828; color: white; box-sizing: border-box; }
+        button.submit { width: 100%; padding: 15px; background-color: #1DB954; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        button.submit:hover { background-color: #1ed760; transform: scale(1.02); }
         
-        /* 박스 스타일 */
-        .step-box { background: #181818; padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: left; border: 1px solid #333; position: relative; }
-        
-        /* 번호 */
-        .step-num { position: absolute; top: -10px; left: -10px; background: #1DB954; color: black; width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; font-weight: bold; }
-        
-        /* 제목 및 텍스트 */
-        h3 { margin-top: 0; color: white; }
-        label { display: block; font-size: 14px; font-weight: bold; color: #1DB954; margin-top: 15px; margin-bottom: 5px; }
-        p.guide { font-size: 12px; color: #aaa; margin: 0 0 10px 0; word-break: keep-all; line-height: 1.4; }
-        
-        /* 입력창 */
-        input { width: 100%; padding: 12px; margin-bottom: 5px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; font-size: 16px; }
-        input:focus { border-color: #1DB954; outline: none; }
-        
-        /* 버튼 */
-        .main-btn { display: block; width: 100%; padding: 15px; border-radius: 50px; border: none; background-color: #1DB954; color: black; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; text-align: center; text-decoration: none; }
-        .sub-link { display: inline-block; font-size: 12px; color: #aaa; text-decoration: underline; margin-bottom: 10px; }
-        
-        /* 주소 박스 */
-        .url-box { background: #222; padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #555; word-break: break-all; font-family: monospace; color: #1DB954; font-size: 13px; margin-bottom: 10px; user-select: all; cursor: pointer; }
-        
-        .hidden { display: none; }
+        /* 매뉴얼 스타일 */
+        .guide-btn { background: none; border: 1px solid #535353; color: #b3b3b3; width: 100%; padding: 10px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-size: 14px; }
+        .guide-content { display: none; background: #282828; padding: 15px; border-radius: 8px; font-size: 13px; color: #b3b3b3; margin-bottom: 20px; border-left: 3px solid #1DB954; }
+        .guide-step { margin-bottom: 15px; }
+        .guide-step strong { color: white; display: block; margin-bottom: 5px; }
+        .copy-box { background: #121212; padding: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-top: 5px; font-family: monospace; color: #1DB954; }
+        .copy-btn { background: #535353; border: none; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+        a { color: #1DB954; text-decoration: none; }
     </style>
+    <script>
+        function toggleGuide() {
+            var guide = document.getElementById("guide");
+            if (guide.style.display === "block") {
+                guide.style.display = "none";
+            } else {
+                guide.style.display = "block";
+            }
+        }
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert("복사되었습니다!");
+            });
+        }
+    </script>
 </head>
 <body>
-
-<div class="container">
-    <h2 style="color:#1DB954;">Moody Setup 🛠️</h2>
-
-    <div id="step1" class="step-box">
-        <div class="step-num">1</div>
-        <h3>주소 등록 (필수!)</h3>
-        <p class="guide">아래 주소를 스포티파이 대시보드 설정의<br><b>Redirect URIs</b>에 등록하세요. (슬래시 / 포함)</p>
+    <div class="container">
+        <h1>Moody 설정</h1>
+        <p style="text-align: center; color: #b3b3b3; font-size: 14px;">스포티파이 키를 입력해 주세요.</p>
         
-        <div class="url-box" onclick="copyFixedUrl()">https://moody-player.github.io/Moody-login/</div>
-        <p style="font-size:11px; color:#666; text-align:center;">(👆 터치하면 복사됩니다)</p>
+        <button class="guide-btn" onclick="toggleGuide()">❓ ID/Secret 발급 방법 (눌러서 보기)</button>
         
-        <a href="https://developer.spotify.com/dashboard" target="_blank" class="main-btn">🚀 스포티파이 대시보드 가기</a>
+        <div id="guide" class="guide-content">
+            <div class="guide-step">
+                <strong>1. 개발자 사이트 접속</strong>
+                <a href="https://developer.spotify.com/dashboard" target="_blank"><u>Spotify Dashboard</u></a>에 접속해서 로그인하세요.
+            </div>
+            <div class="guide-step">
+                <strong>2. 앱 만들기 (Create App)</strong>
+                우측 상단 <b>[Create app]</b> 버튼을 누르세요.<br>
+                App Name은 <b>Moody</b>, Description은 자유롭게 적으세요.
+            </div>
+            <div class="guide-step">
+                <strong>3. 주소 설정 (중요! ⭐)</strong>
+                <b>Redirect URI</b> 칸에 아래 주소를 입력하고 [Add]를 누른 뒤 맨 아래 [Save] 하세요.
+                <div class="copy-box">
+                    <span>https://moody-player.github.io/Moody-login/</span>
+                    <button class="copy-btn" onclick="copyText('https://moody-player.github.io/Moody-login/')">복사</button>
+                </div>
+            </div>
+            <div class="guide-step">
+                <strong>4. 키 복사하기</strong>
+                만들어진 앱의 <b>[Settings]</b> 버튼을 누르면 <b>Client ID</b>가 보입니다.<br>
+                'View client secret'을 누르면 <b>Client Secret</b>도 보입니다.
+            </div>
+        </div>
+
+        <form>
+            <label>Client ID</label>
+            <input type="text" name="client_id" placeholder="붙여넣기 하세요">
+            
+            <label>Client Secret</label>
+            <input type="text" name="client_secret" placeholder="붙여넣기 하세요">
+            
+            <button type="button" class="submit" onclick="alert('이건 미리보기 화면입니다! 실제로는 저장되고 재부팅됩니다.')">저장 및 시작하기</button>
+        </form>
     </div>
-
-    <div id="step2" class="step-box">
-        <div class="step-num">2</div>
-        <h3>정보 입력</h3>
-        
-        <label>Spotify 아이디 (Username)</label>
-        <p class="guide">스포티파이 App > 계정 > <b>[설정 및 개인정보]</b> [계정]에서 '사용자 이름'을 복사하세요.</p>
-        <a href="https://www.spotify.com/account/overview/" target="_blank" class="sub-link">🔍 내 아이디 확인하러 가기 (새창)</a>
-        <input type="text" id="uid" placeholder="예: 31ykww...">
-
-        <label>App 정보 (Client ID / Secret)</label>
-        <p class="guide">개발자 대시보드에서 만드신 <b>App을 클릭</b>하면 상단(Settings)에서 복사할 수 있습니다.</p>
-        <input type="text" id="cid" placeholder="Client ID 붙여넣기">
-        <input type="text" id="sec" placeholder="Client Secret 붙여넣기">
-
-        <button class="main-btn" onclick="goAuth()">인증 코드 받기 👉</button>
-    </div>
-
-    <div id="step3" class="step-box hidden">
-        <div class="step-num">3</div>
-        <h3 style="color:#1DB954">🎉 성공!</h3>
-        <p class="guide">아래 텍스트를 <b>전체 복사</b>해서<br>라즈베리파이 설정창에 붙여넣으세요.</p>
-        <textarea id="finalJson" style="width:100%; height:150px; background:#222; color:white; border:1px solid #1DB954; border-radius:8px; padding:10px; font-size:12px;"></textarea>
-        <button class="main-btn" style="background:white; color:black;" onclick="copyResult()">📋 전체 복사하기</button>
-    </div>
-</div>
-
-<script>
-    // [시스템 로직 유지]
-    const MY_URL = "https://moody-player.github.io/Moody-login/";
-
-    function copyFixedUrl() {
-        try {
-            navigator.clipboard.writeText(MY_URL).then(() => alert("주소가 복사되었습니다!"));
-        } catch (e) {
-            prompt("복사가 안 되면 직접 복사하세요:", MY_URL);
-        }
-    }
-
-    function goAuth() {
-        const uid = document.getElementById('uid').value.trim();
-        const cid = document.getElementById('cid').value.trim();
-        const sec = document.getElementById('sec').value.trim();
-
-        if (!uid || !cid || !sec) {
-            alert("빈칸을 모두 채워주세요!");
-            return;
-        }
-
-        const stateObj = { u: uid, c: cid, s: sec };
-        const stateStr = btoa(JSON.stringify(stateObj));
-        const scope = "user-read-playback-state user-modify-playback-state user-read-currently-playing";
-        
-        // 인증 주소 생성
-        const target = `https://accounts.spotify.com/authorize?client_id=${cid}&response_type=code&redirect_uri=${encodeURIComponent(MY_URL)}&scope=${encodeURIComponent(scope)}&state=${stateStr}`;
-        
-        window.location.href = target;
-    }
-
-    window.onload = function() {
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
-        const state = params.get('state');
-
-        if (code && state) {
-            try {
-                const saved = JSON.parse(atob(state));
-                document.getElementById('step1').classList.add('hidden');
-                document.getElementById('step2').classList.add('hidden');
-                document.getElementById('step3').classList.remove('hidden');
-
-                const finalData = {
-                    username: saved.u,
-                    client_id: saved.c,
-                    client_secret: saved.s,
-                    auth_code: code,
-                    redirect_uri: MY_URL
-                };
-                document.getElementById('finalJson').value = JSON.stringify(finalData);
-            } catch (e) {}
-        }
-    };
-
-    function copyResult() {
-        const box = document.getElementById('finalJson');
-        box.select();
-        document.execCommand('copy');
-        alert("복사되었습니다! 라즈베리파이에 붙여넣으세요.");
-    }
-</script>
 </body>
 </html>
