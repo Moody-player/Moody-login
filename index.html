@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moody JSON Generator</title>
+    <title>Moody 시작하기</title>
     <style>
         /* 스타일은 그대로 유지 */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #121212; color: white; padding: 20px; line-height: 1.5; margin: 0; }
@@ -75,7 +75,7 @@
             <div class="section-box">
                 <div class="section-title">1. 키 발급 가이드</div>
                 <div class="guide-step">
-                    <strong>① 개발자 사이트 접속</strong>
+                    <strong>① Developer 사이트 접속</strong>
                     <a href="https://developer.spotify.com/dashboard" target="_blank">Spotify Dashboard (클릭)</a>
                 </div>
                 <div class="guide-step">
@@ -93,9 +93,13 @@
 
             <div class="section-box">
                 <div class="section-title">2. 앱 키 입력</div>
+                
                 <label>Client ID</label>
+                <p style="font-size:13px; color:#999; margin:2px 0 5px 0;">Dashboard > Settings 화면의 Client ID를 복사하세요.</p>
                 <input type="text" id="client_id" placeholder="Client ID 붙여넣기" required>
+                
                 <label>Client Secret</label>
+                <p style="font-size:13px; color:#999; margin:2px 0 5px 0;">'View client secret'을 눌러서 나오는 문구를 복사하세요.</p>
                 <input type="text" id="client_secret" placeholder="Client Secret 붙여넣기" required>
             </div>
 
