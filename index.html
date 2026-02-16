@@ -5,126 +5,394 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moody 시작하기</title>
     <style>
-        /* 스타일은 그대로 유지 */
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #121212; color: white; padding: 20px; line-height: 1.5; margin: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding-bottom: 50px; }
-        h1 { text-align: center; color: #1DB954; margin-bottom: 30px; font-size: 28px; }
-        .section-box { background: #181818; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); margin-bottom: 25px; border: 1px solid #282828; }
-        .section-title { font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 15px; border-bottom: 2px solid #1DB954; display: inline-block; padding-bottom: 5px; }
-        .guide-step { margin-bottom: 15px; font-size: 14px; color: #b3b3b3; }
-        .guide-step strong { color: white; display: block; margin-bottom: 4px; font-size: 15px; }
-        .guide-step a { color: #1DB954; text-decoration: none; font-weight: bold; }
-        .copy-box { background: #000; padding: 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-family: monospace; color: #1DB954; border: 1px solid #333; }
-        .copy-btn { background: #535353; border: none; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-        .copy-btn:hover { background: #1DB954; color: black; }
-        label { display: block; margin-top: 15px; font-size: 14px; color: #ccc; margin-bottom: 5px;}
-        input[type="text"] { width: 100%; padding: 14px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: white; box-sizing: border-box; font-size: 16px; }
-        input[type="text"]:focus { outline: none; border-color: #1DB954; background: #333; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: linear-gradient(135deg, #1DB954 0%, #191414 100%);
+            color: white; 
+            padding: 20px; 
+            line-height: 1.5; 
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding-bottom: 50px; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #1DB954; 
+            margin-bottom: 10px; 
+            font-size: 32px; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .section-box { 
+            background: rgba(24, 24, 24, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.7); 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(29, 185, 84, 0.3);
+        }
+        .step-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #1DB954;
+            color: black;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .section-title { 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: #fff; 
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .info-text {
+            font-size: 14px;
+            color: #b3b3b3;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        button.main-btn { 
+            width: 100%; 
+            padding: 20px; 
+            background-color: #1DB954; 
+            color: black; 
+            border: none; 
+            border-radius: 50px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+            transition: all 0.3s;
+        }
+        button.main-btn:hover { 
+            background-color: #1ed760; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 185, 84, 0.6);
+        }
+        button.main-btn:active {
+            transform: translateY(0);
+        }
         
-        /* 결과창 스타일 */
-        #result-area { display: none; margin-top: 30px; background: #222; padding: 20px; border-radius: 10px; border: 2px solid #1DB954; }
-        textarea { width: 100%; height: 150px; background: #121212; color: #1DB954; border: none; padding: 10px; font-family: monospace; font-size: 14px; box-sizing: border-box; margin-top: 10px; }
-        
-        button.submit { width: 100%; padding: 18px; background-color: #1DB954; color: black; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button.submit:hover { background-color: #1ed760; transform: scale(1.02); }
+        /* 결과 화면 */
+        #result-area { 
+            display: none;
+            background: rgba(34, 34, 34, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 2px solid #1DB954;
+            box-shadow: 0 8px 32px rgba(29, 185, 84, 0.3);
+        }
+        .success-icon {
+            text-align: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounce 0.5s;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        textarea { 
+            width: 100%; 
+            height: 180px; 
+            background: #000; 
+            color: #1DB954; 
+            border: 1px solid #1DB954; 
+            padding: 15px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 13px; 
+            box-sizing: border-box; 
+            margin-top: 15px;
+            border-radius: 10px;
+            resize: vertical;
+        }
+        .copy-btn {
+            background: #1DB954;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 16px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #1DB954;
+        }
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #ffc107;
+        }
+        .feature-list {
+            background: rgba(29, 185, 84, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .feature-item::before {
+            content: '✓';
+            color: #1DB954;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 18px;
+        }
     </style>
-    <script>
-        function copyText(text) {
-            navigator.clipboard.writeText(text).then(function() { alert("복사되었습니다!"); });
-        }
-
-        function generateJSON(event) {
-            event.preventDefault(); 
-            var username = document.getElementById('username').value;
-            var clientId = document.getElementById('client_id').value;
-            var clientSecret = document.getElementById('client_secret').value;
-            var redirectUri = document.getElementById('uri-text').innerText;
-
-            // 1. 공백 체크
-            if(!username || !clientId || !clientSecret) {
-                alert("모든 정보를 입력해주세요!");
-                return;
-            }
-
-            // 2. 글자 수 체크 (정확히 32자여야 통과)
-            if (clientId.length !== 32) {
-                alert("Client ID가 잘못되었습니다!\n(현재 " + clientId.length + "글자 / 32글자여야 합니다)");
-                return;
-            }
-            if (clientSecret.length !== 32) {
-                alert("Client Secret이 잘못되었습니다!\n(현재 " + clientSecret.length + "글자 / 32글자여야 합니다)");
-                return;
-            }
-
-            var configData = {
-                "username": username,
-                "client_id": clientId,
-                "client_secret": clientSecret,
-                "redirect_uri": redirectUri
-            };
-
-            var jsonString = JSON.stringify(configData, null, 4);
-            document.getElementById('json-output').value = jsonString;
-            document.getElementById('result-area').style.display = 'block';
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
 </head>
 <body>
     <div class="container">
-        <h1>ᯤMoody 열쇠 만들기ᯤ</h1>
+        <h1>🎵 Moody 시작하기</h1>
+        <p class="subtitle">간편한 1클릭 인증 (PKCE 방식)</p>
 
-        <form onsubmit="generateJSON(event)">
+        <div class="section-box">
+            <div class="section-title">
+                <span class="step-number">1</span>
+                Spotify 계정 연동
+            </div>
+            <p class="info-text">
+                Moody는 안전한 PKCE 방식을 사용합니다.<br>
+                복잡한 설정 없이 버튼 하나로 모든 인증이 완료됩니다.
+            </p>
             
-            <div class="section-box">
-                <div class="section-title">1. 키 발급 가이드</div>
-                <div class="guide-step">
-                    <strong>① Developer 사이트 접속</strong>
-                    <a href="https://developer.spotify.com/dashboard" target="_blank">Spotify Dashboard (클릭)</a>
-                </div>
-                <div class="guide-step">
-                    <strong>② 앱 만들기 (Create App)</strong>
-                    Name: Moody / URI 설정 필수
-                </div>
-                <div class="guide-step">
-                    <strong>③ Redirect URI (필수 복사)</strong>
-                    <div class="copy-box">
-                        <span id="uri-text">https://moody-player.github.io/Moody-login/</span>
-                        <button type="button" class="copy-btn" onclick="copyText(document.getElementById('uri-text').innerText)">복사</button>
-                    </div>
-                </div>
+            <div class="feature-list">
+                <div class="feature-item">개발자 계정 생성 불필요</div>
+                <div class="feature-item">앱 등록 불필요</div>
+                <div class="feature-item">Client Secret 노출 걱정 없음</div>
+                <div class="feature-item">완전 자동화된 안전한 인증</div>
             </div>
 
-            <div class="section-box" style="border-left: 5px solid #1DB954;">
-                <div class="section-title">2. 앱 키 입력</div>
-                
-                <label>Client ID</label>
-                <p style="font-size:13px; color:#999; margin:2px 0 5px 0;">Dashboard > Settings 화면의 Client ID를 복사하세요.</p>
-                <input type="text" id="client_id" placeholder="Client ID 붙여넣기 (32자)" minlength="32" maxlength="32" required>
-                
-                <label>Client Secret</label>
-                <p style="font-size:13px; color:#999; margin:2px 0 5px 0;">'View client secret'을 눌러서 나오는 문구를 복사하세요.</p>
-                <input type="text" id="client_secret" placeholder="Client Secret 붙여넣기 (32자)" minlength="32" maxlength="32" required>
-            </div>
-
-            <div class="section-box" style="border-left: 5px solid #1DB954;">
-                <div class="section-title">3. 사용자 정보</div>
-                <p style="font-size:13px; color:#999; margin-bottom:10px;">스포티파이 앱 > 프로필 사진 > 설정 및 개인정보 > 계정에서 확인 가능</p>
-                
-                <label>Spotify Username (아이디)</label>
-                <input type="text" id="username" placeholder="예: 31ykww4hfihbckljhfsdlgh" required>
-            </div>
-
-            <button type="submit" class="submit">Moody 열쇠 받기 (클릭)</button>
-        </form>
-
-        <div id="result-area">
-            <h3 style="color:white; margin-top:0;">👇 발급된 Moody 열쇠 </h3>
-            <p style="font-size:13px; color:#aaa;">아래 내용을 복사 후 Moody_setup WiFI를 연결 후 2번째(10.42.0.1 로 접속) QR코드에 붙여넣으세요.</p>
-            <textarea id="json-output" readonly></textarea>
-            <button class="submit" onclick="copyText(document.getElementById('json-output').value)" style="background:#535353; color:white; margin-top:10px;">전체 복사하기</button>
+            <button class="main-btn" onclick="startAuth()" id="loginBtn">
+                🎵 Spotify로 로그인
+            </button>
         </div>
 
+        <div class="section-box" id="loading-area" style="display:none;">
+            <div class="loading">인증 처리 중</div>
+        </div>
+
+        <div id="result-area">
+            <div class="success-icon">✅</div>
+            <h2 style="color:#1DB954; margin-top:0; text-align:center;">인증 완료!</h2>
+            <p style="font-size:14px; color:#aaa; text-align:center;">
+                아래 코드를 복사하여 Moody 설정 화면에 붙여넣으세요.
+            </p>
+            <div class="warning">
+                ⚠️ 이 코드는 5분 후 만료됩니다. 빠르게 진행하세요!
+            </div>
+            <textarea id="json-output" readonly></textarea>
+            <button class="copy-btn" onclick="copyToClipboard()">
+                📋 클립보드에 복사
+            </button>
+        </div>
     </div>
+
+    <script>
+        // ==========================================
+        // PKCE 설정
+        // ==========================================
+        const CLIENT_ID = 'f0c674c25c954bbe9f8be89985d5b54c';
+        const REDIRECT_URI = 'https://moody-player.github.io/Moody-login/';
+        const SCOPE = 'user-read-playback-state user-read-currently-playing';
+
+        // PKCE: Code Verifier & Challenge 생성
+        function generateCodeVerifier() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            return base64URLEncode(array);
+        }
+
+        function base64URLEncode(buffer) {
+            return btoa(String.fromCharCode.apply(null, buffer))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '');
+        }
+
+        async function generateCodeChallenge(verifier) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(verifier);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return base64URLEncode(new Uint8Array(hash));
+        }
+
+        // ==========================================
+        // 인증 시작
+        // ==========================================
+        async function startAuth() {
+            const codeVerifier = generateCodeVerifier();
+            const codeChallenge = await generateCodeChallenge(codeVerifier);
+            
+            // code_verifier 저장 (나중에 토큰 교환 시 필요)
+            sessionStorage.setItem('code_verifier', codeVerifier);
+            
+            // Spotify 인증 페이지로 이동
+            const authUrl = `https://accounts.spotify.com/authorize?` +
+                `client_id=${CLIENT_ID}&` +
+                `response_type=code&` +
+                `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
+                `scope=${encodeURIComponent(SCOPE)}&` +
+                `code_challenge_method=S256&` +
+                `code_challenge=${codeChallenge}`;
+            
+            window.location.href = authUrl;
+        }
+
+        // ==========================================
+        // 콜백 처리
+        // ==========================================
+        window.onload = async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const authCode = urlParams.get('code');
+            const error = urlParams.get('error');
+            
+            if (error) {
+                alert('인증 실패: ' + error);
+                return;
+            }
+            
+            if (authCode) {
+                // URL에서 code 제거 (보안)
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                // 로딩 표시
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('loading-area').style.display = 'block';
+                
+                // 토큰 교환 및 사용자 정보 가져오기
+                await processAuth(authCode);
+            }
+        }
+
+        // ==========================================
+        // 토큰 교환 및 사용자 정보 가져오기
+        // ==========================================
+        async function processAuth(authCode) {
+            try {
+                const codeVerifier = sessionStorage.getItem('code_verifier');
+                
+                if (!codeVerifier) {
+                    throw new Error('Code verifier를 찾을 수 없습니다.');
+                }
+                
+                // 1. 토큰 교환 (PKCE)
+                const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        grant_type: 'authorization_code',
+                        code: authCode,
+                        redirect_uri: REDIRECT_URI,
+                        client_id: CLIENT_ID,
+                        code_verifier: codeVerifier
+                    })
+                });
+
+                const tokenData = await tokenResponse.json();
+                
+                if (!tokenData.access_token) {
+                    throw new Error(tokenData.error_description || '토큰 교환 실패');
+                }
+
+                // 2. 사용자 정보 가져오기
+                const userResponse = await fetch('https://api.spotify.com/v1/me', {
+                    headers: {
+                        'Authorization': 'Bearer ' + tokenData.access_token
+                    }
+                });
+
+                const userData = await userResponse.json();
+
+                // 3. JSON 생성
+                const configData = {
+                    username: userData.id,
+                    client_id: CLIENT_ID,
+                    client_secret: "pkce-no-secret-needed",
+                    auth_code: authCode,
+                    redirect_uri: REDIRECT_URI,
+                    code_verifier: codeVerifier,
+                    access_token: tokenData.access_token,
+                    refresh_token: tokenData.refresh_token
+                };
+
+                // 4. 화면에 표시
+                document.getElementById('json-output').value = JSON.stringify(configData, null, 2);
+                document.getElementById('loading-area').style.display = 'none';
+                document.getElementById('result-area').style.display = 'block';
+                
+                // code_verifier 삭제 (보안)
+                sessionStorage.removeItem('code_verifier');
+                
+                // 스크롤
+                document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('인증 처리 오류:', error);
+                alert('오류 발생: ' + error.message);
+                document.getElementById('loading-area').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+            }
+        }
+
+        // ==========================================
+        // 클립보드 복사
+        // ==========================================
+        function copyToClipboard() {
+            const textarea = document.getElementById('json-output');
+            textarea.select();
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    alert('✅ 복사 완료!\n\nMoody 설정 화면에 붙여넣으세요.');
+                });
+            } else {
+                document.execCommand('copy');
+                alert('✅ 복사 완료!\n\nMoody 설정 화면에 붙여넣으세요.');
+            }
+        }
+    </script>
 </body>
 </html>
