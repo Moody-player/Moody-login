@@ -3,350 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moody 시작하기</title>
+    <title>Moody 로그인</title>
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background: linear-gradient(135deg, #1DB954 0%, #191414 100%);
-            color: white; 
-            padding: 20px; 
-            line-height: 1.5; 
-            margin: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #191414 0%, #1DB954 100%);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        .container { 
-            max-width: 600px; 
-            margin: 0 auto; 
-            padding-bottom: 50px; 
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
-        h1 { 
-            text-align: center; 
-            color: #1DB954; 
-            margin-bottom: 10px; 
-            font-size: 32px; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #1DB954;
+            font-size: 28px;
+            margin-bottom: 10px;
         }
         .subtitle {
-            text-align: center;
             color: #aaa;
             font-size: 14px;
             margin-bottom: 30px;
         }
-        .section-box { 
-            background: rgba(24, 24, 24, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.7); 
-            margin-bottom: 25px; 
-            border: 1px solid rgba(29, 185, 84, 0.3);
-        }
-        .step-number {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
+        .login-btn {
             background: #1DB954;
             color: black;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 32px;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
             font-weight: bold;
-            margin-right: 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .section-title { 
-            font-size: 20px; 
-            font-weight: bold; 
-            color: #fff; 
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
+        .login-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(29, 185, 84, 0.4);
         }
-        .info-text {
-            font-size: 14px;
-            color: #b3b3b3;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        .login-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
         }
-        button.main-btn { 
-            width: 100%; 
-            padding: 20px; 
-            background-color: #1DB954; 
-            color: black; 
-            border: none; 
-            border-radius: 50px; 
-            font-size: 20px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
-            transition: all 0.3s;
+        
+        /* 로딩 화면 */
+        #loading-area {
+            display: none;
+            color: white;
+            padding: 20px;
         }
-        button.main-btn:hover { 
-            background-color: #1ed760; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(29, 185, 84, 0.6);
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #1DB954;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
-        button.main-btn:active {
-            transform: translateY(0);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         /* 결과 화면 */
-        #result-area { 
+        #result-area {
             display: none;
-            background: rgba(34, 34, 34, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px; 
-            border-radius: 20px; 
-            border: 2px solid #1DB954;
-            box-shadow: 0 8px 32px rgba(29, 185, 84, 0.3);
         }
         .success-icon {
-            text-align: center;
             font-size: 60px;
-            margin-bottom: 20px;
-            animation: bounce 0.5s;
+            margin-bottom: 15px;
         }
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        textarea { 
-            width: 100%; 
-            height: 180px; 
-            background: #000; 
-            color: #1DB954; 
-            border: 1px solid #1DB954; 
-            padding: 15px; 
-            font-family: 'Courier New', monospace; 
-            font-size: 13px; 
-            box-sizing: border-box; 
-            margin-top: 15px;
+        .json-output {
+            background: #1a1a1a;
+            border: 2px dashed #1DB954;
             border-radius: 10px;
-            resize: vertical;
+            padding: 15px;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 11px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            margin: 15px 0;
+            word-break: break-all;
         }
         .copy-btn {
             background: #1DB954;
             color: black;
             border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
+            padding: 14px 30px;
             font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
         }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: #1DB954;
-        }
-        .loading::after {
-            content: '...';
-            animation: dots 1.5s infinite;
-        }
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-        .warning {
-            background: rgba(255, 193, 7, 0.1);
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #ffc107;
-        }
-        .feature-list {
+        
+        /* 다음 단계 안내 */
+        #next-steps {
+            display: none;
             background: rgba(29, 185, 84, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
+            border: 1px solid #1DB954;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
         }
-        .feature-item {
+        #next-steps h3 {
+            color: #1DB954;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .step-num {
+            background: #1DB954;
+            color: black;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            margin: 10px 0;
-            font-size: 14px;
-        }
-        .feature-item::before {
-            content: '✓';
-            color: #1DB954;
+            justify-content: center;
             font-weight: bold;
+            font-size: 12px;
             margin-right: 10px;
-            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .step-text {
+            color: #ccc;
+        }
+        .step-text strong {
+            color: white;
+        }
+        .tip {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #888;
+        }
+        .tip-icon {
+            margin-right: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎵 Moody 시작하기</h1>
-        <p class="subtitle">간편한 1클릭 인증 (PKCE 방식)</p>
-
-        <div class="section-box">
-            <div class="section-title">
-                <span class="step-number">1</span>
-                Spotify 계정 연동
-            </div>
-            <p class="info-text">
-                Moody는 안전한 PKCE 방식을 사용합니다.<br>
-                복잡한 설정 없이 버튼 하나로 모든 인증이 완료됩니다.
-            </p>
-            
-            <div class="feature-list">
-                <div class="feature-item">개발자 계정 생성 불필요</div>
-                <div class="feature-item">앱 등록 불필요</div>
-                <div class="feature-item">Client Secret 노출 걱정 없음</div>
-                <div class="feature-item">완전 자동화된 안전한 인증</div>
-            </div>
-
-            <button class="main-btn" onclick="startAuth()" id="loginBtn">
-                🎵 Spotify로 로그인
-            </button>
+        <div class="logo">🎵</div>
+        <h1>Moody 로그인</h1>
+        <p class="subtitle">Spotify 계정으로 로그인하세요</p>
+        
+        <!-- 로그인 버튼 -->
+        <button id="loginBtn" class="login-btn" onclick="startLogin()">
+            Spotify로 로그인 🎧
+        </button>
+        
+        <!-- 로딩 -->
+        <div id="loading-area">
+            <div class="spinner"></div>
+            <p>인증 처리 중...</p>
         </div>
-
-        <div class="section-box" id="loading-area" style="display:none;">
-            <div class="loading">인증 처리 중</div>
-        </div>
-
+        
+        <!-- 결과 -->
         <div id="result-area">
             <div class="success-icon">✅</div>
-            <h2 style="color:#1DB954; margin-top:0; text-align:center;">인증 완료!</h2>
-            <p style="font-size:14px; color:#aaa; text-align:center;">
-                아래 코드를 복사하여 Moody 설정 화면에 붙여넣으세요.
-            </p>
-            <div class="warning">
-                ⚠️ 이 코드는 5분 후 만료됩니다. 빠르게 진행하세요!
-            </div>
-            <textarea id="json-output" readonly></textarea>
+            <h2 style="color: #1DB954; margin-bottom: 10px;">로그인 성공!</h2>
+            <p style="color: #aaa; font-size: 14px;">아래 데이터를 복사하세요</p>
+            
+            <textarea id="json-output" class="json-output" readonly></textarea>
+            
             <button class="copy-btn" onclick="copyToClipboard()">
-                📋 클립보드에 복사
+                📋 데이터 복사하기
             </button>
+            
+            <!-- 다음 단계 안내 -->
+            <div id="next-steps">
+                <h3>📱 다음 단계</h3>
+                
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-text">
+                        <strong>WiFi 설정</strong>으로 이동
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-text">
+                        <strong>'Moody_Setup'</strong> WiFi에 연결<br>
+                        (비밀번호: moody1234)
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-text">
+                        자동으로 설정 페이지가 열립니다<br>
+                        <span style="color: #888;">안 열리면 Moody 화면의 오른쪽 QR 스캔</span>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-text">
+                        복사한 <strong>데이터 붙여넣기</strong> → 완료!
+                    </div>
+                </div>
+                
+                <div class="tip">
+                    <span class="tip-icon">💡</span>
+                    설정 페이지가 안 열리면 브라우저에서<br>
+                    <strong style="color: #1DB954;">http://10.42.0.1</strong> 직접 입력
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // PKCE 설정
+        // Spotify PKCE 인증
         // ==========================================
-        const CLIENT_ID = 'f0c674c25c954bbe9f8be89985d5b54c';
-        const REDIRECT_URI = 'https://moody-player.github.io/Moody-login/';
-        const SCOPE = 'user-read-playback-state user-read-currently-playing';
+        const CLIENT_ID = 'f0c674c25c954bbe9f8be89985d5b54c';  // 본인 Client ID로 교체
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
+        const SCOPES = 'user-read-playback-state user-read-currently-playing user-top-read';
 
-        // PKCE: Code Verifier & Challenge 생성
-        function generateCodeVerifier() {
-            const array = new Uint8Array(32);
-            crypto.getRandomValues(array);
-            return base64URLEncode(array);
+        // PKCE 코드 생성
+        function generateRandomString(length) {
+            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+            let text = '';
+            for (let i = 0; i < length; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            return text;
         }
 
-        function base64URLEncode(buffer) {
-            return btoa(String.fromCharCode.apply(null, buffer))
+        async function generateCodeChallenge(codeVerifier) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(codeVerifier);
+            const digest = await window.crypto.subtle.digest('SHA-256', data);
+            return btoa(String.fromCharCode(...new Uint8Array(digest)))
                 .replace(/\+/g, '-')
                 .replace(/\//g, '_')
-                .replace(/=/g, '');
+                .replace(/=+$/, '');
         }
 
-        async function generateCodeChallenge(verifier) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(verifier);
-            const hash = await crypto.subtle.digest('SHA-256', data);
-            return base64URLEncode(new Uint8Array(hash));
-        }
-
-        // ==========================================
-        // 인증 시작
-        // ==========================================
-        async function startAuth() {
-            const codeVerifier = generateCodeVerifier();
+        async function startLogin() {
+            const codeVerifier = generateRandomString(128);
             const codeChallenge = await generateCodeChallenge(codeVerifier);
             
-            // code_verifier 저장 (나중에 토큰 교환 시 필요)
             sessionStorage.setItem('code_verifier', codeVerifier);
             
-            // Spotify 인증 페이지로 이동
-            const authUrl = `https://accounts.spotify.com/authorize?` +
-                `client_id=${CLIENT_ID}&` +
-                `response_type=code&` +
-                `redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
-                `scope=${encodeURIComponent(SCOPE)}&` +
-                `code_challenge_method=S256&` +
-                `code_challenge=${codeChallenge}`;
+            const authUrl = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+                client_id: CLIENT_ID,
+                response_type: 'code',
+                redirect_uri: REDIRECT_URI,
+                scope: SCOPES,
+                code_challenge_method: 'S256',
+                code_challenge: codeChallenge
+            });
             
             window.location.href = authUrl;
         }
 
-        // ==========================================
-        // 콜백 처리
-        // ==========================================
+        // 페이지 로드 시 콜백 확인
         window.onload = async function() {
             const urlParams = new URLSearchParams(window.location.search);
             const authCode = urlParams.get('code');
             const error = urlParams.get('error');
             
             if (error) {
-                alert('인증 실패: ' + error);
+                alert('로그인 취소됨: ' + error);
                 return;
             }
             
-            if (authCode) {
-                // URL에서 code 제거 (보안)
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                // 로딩 표시
-                document.getElementById('loginBtn').style.display = 'none';
-                document.getElementById('loading-area').style.display = 'block';
-                
-                // 토큰 교환 및 사용자 정보 가져오기
-                await processAuth(authCode);
-            }
-        }
-
-        // ==========================================
-        // 토큰 교환 및 사용자 정보 가져오기
-        // ==========================================
-        async function processAuth(authCode) {
+            if (!authCode) return;
+            
+            // URL 정리
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('loading-area').style.display = 'block';
+            
             try {
                 const codeVerifier = sessionStorage.getItem('code_verifier');
-                
                 if (!codeVerifier) {
-                    throw new Error('Code verifier를 찾을 수 없습니다.');
+                    throw new Error('code_verifier 없음. 다시 로그인하세요.');
                 }
                 
-                // 1. 토큰 교환 (PKCE)
+                // 토큰 교환
                 const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({
+                        client_id: CLIENT_ID,
                         grant_type: 'authorization_code',
                         code: authCode,
                         redirect_uri: REDIRECT_URI,
-                        client_id: CLIENT_ID,
                         code_verifier: codeVerifier
                     })
                 });
-
+                
                 const tokenData = await tokenResponse.json();
                 
-                if (!tokenData.access_token) {
-                    throw new Error(tokenData.error_description || '토큰 교환 실패');
+                if (tokenData.error) {
+                    throw new Error(tokenData.error_description || tokenData.error);
                 }
-
-                // 2. 사용자 정보 가져오기
+                
+                // 사용자 정보 가져오기
                 const userResponse = await fetch('https://api.spotify.com/v1/me', {
-                    headers: {
-                        'Authorization': 'Bearer ' + tokenData.access_token
-                    }
+                    headers: { 'Authorization': 'Bearer ' + tokenData.access_token }
                 });
-
                 const userData = await userResponse.json();
-
-                // 3. JSON 생성
+                
+                // JSON 생성
                 const configData = {
                     username: userData.id,
                     client_id: CLIENT_ID,
@@ -357,18 +350,14 @@
                     access_token: tokenData.access_token,
                     refresh_token: tokenData.refresh_token
                 };
-
-                // 4. 화면에 표시
+                
+                // 화면에 표시
                 document.getElementById('json-output').value = JSON.stringify(configData, null, 2);
                 document.getElementById('loading-area').style.display = 'none';
                 document.getElementById('result-area').style.display = 'block';
                 
-                // code_verifier 삭제 (보안)
                 sessionStorage.removeItem('code_verifier');
                 
-                // 스크롤
-                document.getElementById('result-area').scrollIntoView({ behavior: 'smooth' });
-
             } catch (error) {
                 console.error('인증 처리 오류:', error);
                 alert('오류 발생: ' + error.message);
@@ -377,21 +366,35 @@
             }
         }
 
-        // ==========================================
         // 클립보드 복사
-        // ==========================================
         function copyToClipboard() {
             const textarea = document.getElementById('json-output');
             textarea.select();
+            textarea.setSelectionRange(0, 99999);
             
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(textarea.value).then(() => {
-                    alert('✅ 복사 완료!\n\nMoody 설정 화면에 붙여넣으세요.');
+                    showCopySuccess();
                 });
             } else {
                 document.execCommand('copy');
-                alert('✅ 복사 완료!\n\nMoody 설정 화면에 붙여넣으세요.');
+                showCopySuccess();
             }
+        }
+        
+        function showCopySuccess() {
+            const btn = document.querySelector('.copy-btn');
+            btn.textContent = '✅ 복사 완료!';
+            btn.style.background = '#0a5';
+            
+            // 다음 단계 안내 표시
+            document.getElementById('next-steps').style.display = 'block';
+            document.getElementById('next-steps').scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                btn.textContent = '📋 다시 복사하기';
+                btn.style.background = '#1DB954';
+            }, 3000);
         }
     </script>
 </body>
